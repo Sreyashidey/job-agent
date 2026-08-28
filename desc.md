@@ -1268,3 +1268,4 @@ The final workflow I want to follow throughout the project is:
 The objective is not merely to make the Job Radar work.
 
 The objective is to learn how a real software team develops, tests, integrates, deploys and maintains an application, while simultaneously building a genuinely useful AI-powered product.
+
