@@ -4,7 +4,11 @@ import com.jobradar.backend.model.Job;
 import com.jobradar.backend.service.JobService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 
@@ -19,8 +23,15 @@ public class JobController {
     }
 
     @GetMapping
-    public List<Job> getJobs(){
-        return jobService.getJobs();
+    public List<Job> getJobs(@RequestParam(required = false) String company) {
+    return jobService.getJobs(company);
+}
+    
+    @PostMapping
+    public Job createJob(@RequestBody Job job){
+        return jobService.createJob(job);
     }
+    
+    
     
 }
