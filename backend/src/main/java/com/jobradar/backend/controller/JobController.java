@@ -23,8 +23,13 @@ public class JobController {
     }
 
     @GetMapping
-    public List<Job> getJobs(@RequestParam(required = false) String company) {
-    return jobService.getJobs(company);
+    public List<Job> getJobs(
+        @RequestParam(required = false) String company,
+        @RequestParam(required = false) String location,
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String experience) {
+
+    return jobService.getJobs(company, location, title, experience);
 }
     
     @PostMapping
