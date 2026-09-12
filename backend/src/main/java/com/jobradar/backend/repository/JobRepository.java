@@ -10,4 +10,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByLocationIgnoreCase(String location);
     List<Job> findByTitleContainingIgnoreCase(String title);
     List<Job> findByExperienceIgnoreCase(String experience);
+    boolean existsBySourceAndExternalJobId(String source,String externalJobId);
 }
