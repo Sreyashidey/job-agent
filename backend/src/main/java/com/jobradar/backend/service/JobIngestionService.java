@@ -1,5 +1,6 @@
 package com.jobradar.backend.service;
 
+import com.jobradar.backend.dto.AdzunaResponseDTO;
 import com.jobradar.backend.dto.JobDTO;
 import com.jobradar.backend.model.Job;
 import com.jobradar.backend.repository.JobRepository;
@@ -24,12 +25,35 @@ public class JobIngestionService {
 
     public List<JobDTO> fetchJobs() {
 
-        String url = "http://localhost:8080/mock/jobs";
+    String url = "https://api.adzuna.com/v1/api/jobs/in/search/1"
+            + "?app_id={appId}"
+            + "&app_key={appKey}"
+            + "&what=software engineer"
+            + "&where=Chennai"
+            + "&results_per_page=10";
 
-        JobDTO[] jobs = restTemplate.getForObject(url, JobDTO[].class);
+    AdzunaResponseDTO response = restTemplate.getForObject(
+            url,
+            AdzunaResponseDTO.class,
+            System.getenv("ADZUNA_APP_ID"),
+            System.getenv("ADZUNA_APP_KEY")
+    );
 
-        return Arrays.asList(jobs);
-    }
+    return response.getResults().stream()
+            .map(job -> {
+                JobDTO dto = new JobDTO();
+
+                dto.setCompany(job.getCompany().getDisplay_name());
+                dto.setTitle(job.getTitle());
+                dto.setLocation(job.getLocation().getDisplay_name());
+                dto.setSource("Adzuna");
+                dto.setExternalJobId(job.getId());
+                dto.setUrl(job.getRedirect_url());
+
+                return dto;
+            })
+            .toList();
+}
 
     public List<Job> ingestJobs() {
 
