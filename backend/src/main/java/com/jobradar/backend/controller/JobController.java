@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
@@ -22,14 +24,21 @@ public class JobController {
         this.jobService=jobService;
     }
 
-    @GetMapping
-    public List<Job> getJobs(
+@GetMapping
+public Page<Job> getJobs(
         @RequestParam(required = false) String company,
         @RequestParam(required = false) String location,
         @RequestParam(required = false) String title,
-        @RequestParam(required = false) String experience) {
+        @RequestParam(required = false) String experience,
+        Pageable pageable) {
 
-    return jobService.getJobs(company, location, title, experience);
+    return jobService.getJobs(
+            company,
+            location,
+            title,
+            experience,
+            pageable
+    );
 }
     
     @PostMapping

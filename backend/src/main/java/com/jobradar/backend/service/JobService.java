@@ -1,39 +1,38 @@
 package com.jobradar.backend.service;
-
+import com.jobradar.backend.specification.JobSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import com.jobradar.backend.model.Job;
 import com.jobradar.backend.repository.JobRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class JobService {
-    private final JobRepository jobRepository;
-     public JobService(JobRepository jobRepository){
-        this.jobRepository=jobRepository;
-}
 
-public List<Job> getJobs(
+    private final JobRepository jobRepository;
+
+    public JobService(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+
+    public Page<Job> getJobs(
         String company,
         String location,
         String title,
-        String experience) {
+        String experience,
+        Pageable pageable) {
 
-    List<Job> jobs = jobRepository.findAll();
+    Specification<Job> specification = Specification
+            .where(JobSpecification.hasCompany(company))
+            .and(JobSpecification.hasLocation(location))
+            .and(JobSpecification.hasTitle(title))
+            .and(JobSpecification.hasExperience(experience));
 
-    return jobs.stream()
-            .filter(job -> company == null ||
-                    job.getCompany().equalsIgnoreCase(company))
-            .filter(job -> location == null ||
-                    job.getLocation().equalsIgnoreCase(location))
-            .filter(job -> title == null ||
-                    job.getTitle().toLowerCase().contains(title.toLowerCase()))
-            .filter(job -> experience == null ||
-                    job.getExperience().equalsIgnoreCase(experience))
-            .toList();
+    return jobRepository.findAll(specification, pageable);
 }
-public Job createJob(Job job){
-    return jobRepository.save(job);
-}
+
+    public Job createJob(Job job) {
+        return jobRepository.save(job);
     }
-
+}
